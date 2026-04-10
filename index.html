@@ -6,15 +6,7 @@
 <title>Viral Artist System — Artist Audit</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  html, body {
-    background: #0D1B3E !important;
-    background-color: #0D1B3E !important;
-    margin: 0; padding: 0;
-    color: #FFFFFF;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-  }
+  html, body { background: #0D1B3E !important; background-color: #0D1B3E !important; margin: 0; padding: 0; color: #FFFFFF; font-family: 'Montserrat', sans-serif; font-weight: 300; min-height: 100vh; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   .topbar { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; background: #0D1B3E !important; position: sticky; top: 0; z-index: 100; }
   .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: #fff; letter-spacing: 0.05em; }
@@ -71,11 +63,13 @@
   .score-num { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; color: #C8AA6E; line-height: 1; margin-bottom: 8px; }
   .score-lbl { font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
   .audit-block { border-top: 1px solid rgba(255,255,255,0.1); padding: 40px 0; display: grid; grid-template-columns: 210px 1fr; gap: 48px; animation: slideUp 0.4s ease both; }
+  .audit-block.highlight { border-top: 1px solid #C8AA6E; }
   @media (max-width: 600px) { .audit-block { grid-template-columns: 1fr; gap: 14px; padding: 32px 0; } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   .block-meta { padding-top: 4px; }
   .block-tag { font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: #C8AA6E; margin-bottom: 12px; }
   .block-tag.red { color: #e05a3a; }
+  .block-tag.gold-bright { color: #f0c97a; }
   .block-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: #fff; line-height: 1.2; }
   .block-body { font-size: 13px; line-height: 2; color: rgba(255,255,255,0.62); font-weight: 300; white-space: pre-wrap; }
   .error-msg { display: none; margin-top: 16px; font-size: 11px; color: #e05a3a; text-align: center; }
@@ -94,7 +88,7 @@
     <p class="hero-sub">A complete audit of your music, media presence, and brand — with a personal strategy built to take you to 1M listeners.</p>
   </div>
   <div class="stats-panel">
-    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">Strategy<br>Modules</div></div>
+    <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">Strategy<br>Modules</div></div>
     <div class="stat-item"><div class="stat-num">5+</div><div class="stat-label">Revenue<br>Streams</div></div>
     <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">Day Action<br>Plan</div></div>
   </div>
@@ -104,14 +98,14 @@
   <div class="section-label">Your Profile</div>
   <div class="form-grid">
     <div class="field"><label>Artist / Stage Name</label><input type="text" id="artistName" placeholder="Your name"/></div>
-    <div class="field"><label>Genre & Style</label><input type="text" id="genre" placeholder="e.g. Trap, R&B, Indie Pop"/></div>
+    <div class="field"><label>Genre & Subgenre</label><input type="text" id="genre" placeholder="e.g. Dark Trap, Drill, Melodic Rap"/></div>
     <div class="field"><label>Spotify Artist URL</label><input type="url" id="spotify" placeholder="open.spotify.com/artist/..."/></div>
     <div class="field"><label>Instagram URL</label><input type="url" id="instagram" placeholder="instagram.com/yourname"/></div>
     <div class="field"><label>YouTube Channel</label><input type="url" id="youtube" placeholder="youtube.com/@yourname"/></div>
-    <div class="field"><label>Monthly Spotify Listeners</label><input type="text" id="listeners" placeholder="e.g. 2,400"/></div>
+    <div class="field"><label>Monthly Spotify Listeners</label><input type="text" id="listeners" placeholder="e.g. 800"/></div>
     <div class="field"><label>Instagram Followers</label><input type="text" id="followers" placeholder="e.g. 1,200"/></div>
-    <div class="field"><label>Your Goal & Timeline</label><input type="text" id="goal" placeholder="e.g. 1M listeners in 18 months"/></div>
-    <div class="field full"><label>Biggest Challenge Right Now</label><textarea id="challenge" placeholder="e.g. Can't grow outside my city..."></textarea></div>
+    <div class="field"><label>Your Goal & Timeline</label><input type="text" id="goal" placeholder="e.g. 1M listeners in 12 months"/></div>
+    <div class="field full"><label>Biggest Challenge Right Now</label><textarea id="challenge" placeholder="e.g. Can't grow outside my city, no streams, don't know where to start..."></textarea></div>
   </div>
   <button class="btn-cta" id="runBtn" onclick="runAudit()">Generate My Strategy</button>
   <div class="error-msg" id="errorMsg"></div>
@@ -144,11 +138,111 @@ async function runAudit(){
   document.getElementById('loadingWrap').classList.add('active');
   startLoading();
   const d={name:artistName,genre,spotify:document.getElementById('spotify').value.trim(),instagram:document.getElementById('instagram').value.trim(),youtube:document.getElementById('youtube').value.trim(),listeners:document.getElementById('listeners').value.trim(),followers:document.getElementById('followers').value.trim(),goal:document.getElementById('goal').value.trim(),challenge:document.getElementById('challenge').value.trim()};
-  const prompt=`You are a world-class music industry strategist. Deliver a brutally honest, specific audit. No generic advice. Reference their genre, numbers, situation in every section.\n\nARTIST:\n- Name: ${d.name}\n- Genre: ${d.genre}\n- Spotify: ${d.spotify||'not provided'}\n- Instagram: ${d.instagram||'not provided'}\n- YouTube: ${d.youtube||'not provided'}\n- Monthly Listeners: ${d.listeners||'unknown'}\n- IG Followers: ${d.followers||'unknown'}\n- Goal: ${d.goal||'1M listeners'}\n- Challenge: ${d.challenge||'not specified'}\n\nReturn ONLY valid JSON:\n{"scores":[{"label":"Music Strategy","value":"X/10"},{"label":"Personal Brand","value":"X/10"},{"label":"Growth Potential","value":"X/10"},{"label":"Monetization","value":"X/10"}],"blocks":[{"tag":"Music Audit","title":"Sound, Catalog & Positioning","accent":"gold","body":"220-word audit of music positioning, sound differentiation, release cadence, what is and isnt working."},{"tag":"Brand Audit","title":"Instagram & Personal Brand","accent":"gold","body":"220-word audit of Instagram, bio, content gaps, what builds real fan loyalty."},{"tag":"Growth Roadmap","title":"Path to 1M — Phase by Phase","accent":"gold","body":"270-word roadmap: Phase 1 (0-3mo), Phase 2 (3-6mo), Phase 3 (6-18mo). Platforms, tactics, playlist strategy."},{"tag":"Viral Strategy","title":"Engineering Your Breakout Moment","accent":"gold","body":"200-word viral strategy: TikTok/Reels angles, hook formats, what goes viral in their niche."},{"tag":"Fan System","title":"Converting Listeners to Superfans","accent":"gold","body":"160-word strategy: repeat streams, community, exclusive drops."},{"tag":"Monetization","title":"5 Revenue Streams Beyond Streaming","accent":"red","body":"220-word breakdown: merch, licensing, sync, memberships, brand deals. Specific first steps."},{"tag":"Action Plan","title":"Next 30 Days — Start Here","accent":"gold","body":"Week 1, Week 2, Week 3, Week 4. Concrete actions only."}]}`;
+  const prompt=`You are a music industry manager, personal brand strategist, and showbiz expert. You have worked with artists who went from 0 to millions. You understand Spotify, TikTok, Instagram, labels, playlists. Most importantly you understand how iconic personal brands are built, how real careers are constructed, and what separates artists who make it from those who plateau forever.
+
+Your job: deliver a complete, honest, supportive audit that makes the artist feel seen, understood, and equipped with a clear path forward. Direct but never demotivating. Support and guide but never hide the truth. Use a combination of direct statements, questions that make the artist arrive at their own conclusions, and examples from iconic artists who faced the same challenges.
+
+Tone: like a senior industry mentor who genuinely wants this artist to win. Direct, warm, specific, zero filler. Mix short punchy sentences with deeper explanation when it matters. Never academic. Never like a textbook. Real talk.
+
+CRITICAL PHILOSOPHY:
+
+THE FIRST AND MOST IMPORTANT QUESTION:
+Before strategy, before tactics, before anything the artist must answer two questions honestly:
+1. Do you have a real goal or just a wish? A wish is I want to blow up someday. A goal is I want 1M Spotify listeners in 12 months and I am willing to build a system to get there.
+2. Are you releasing music just for friends and people you know or do you genuinely want to become a serious artist with a real career?
+Most artists never answer these questions honestly. They stay stuck between hobby and career doing neither fully. The audit must diagnose which category this artist is in based on their data and speak to them accordingly. Do this through direct questions, through examples of artists who made the choice clearly (Kanye decided he was going to be the greatest and built everything around that decision), and through honest reflection on what their current numbers reveal about their commitment level. Be supportive, this is not judgment, it is clarity.
+
+THE FOUR CRITICAL MISTAKES MOST ARTISTS MAKE:
+Diagnose which apply to this specific artist based on their data:
+1. NO IDENTITY: no clear sound, visual world, or character arc. They exist but do not stand for anything specific. Ask: if someone landed on their profile right now, what would they feel in 10 seconds?
+2. NO REAL GOAL: releasing music without direction, without checkpoints, without a plan.
+3. NO SERIOUS APPROACH AND VISION: treating music as a hobby while wanting career-level results. Tyler the Creator did not treat his career as a hobby. Neither did Kanye.
+4. NO SYSTEM AND STRATEGY: dropping music randomly, no content around it, no release strategy, no community building. A brand does not just drop music, it drops a world. Every release is a chapter. Every rollout has a feeling attached to it.
+Address these as a mentor, not a critic. Use questions that make the artist reflect. Use examples of iconic artists who solved the same problem.
+
+PERSONAL BRAND IS SHOWBIZ PLUS MARKETING:
+- Study how Kanye West built eras: MBDTF, Yeezus, 808s, each a completely different world. Study how Michael Jackson turned every era into a cultural event. Study how Tyler the Creator went from Goblin to Igor, completely different worlds, same artist, same core. This is what separates artists from icons.
+- A personal brand is a CHARACTER ARC. The audience follows the journey not just the music. Your journey is what makes you interesting, not your features, not your follower count. The path.
+- The thing that makes an artist iconic is usually what makes them strange. Find what is already real and amplify it beyond comfort. Strange is memorable. Polished and correct is forgettable.
+- CONSISTENCY OF PRESENCE. INCONSISTENCY OF FORM. Show up every day, never show up the same way twice. The moment the audience can predict your next move they stop paying attention.
+- Content is a game with factions, lore, and shared language. People do not want to be taught, they want to participate, take sides, feel like part of something moving. Build the game. Let the audience play it.
+- A brand drops a world not a track. Every release is a chapter with its own visual language, sound, and emotional temperature. Announce before you drop. Build anticipation. The people waiting for it are the most valuable first listeners.
+- Make your career a movie. Find the joy in the process not just the outcome. The artists who plateau are often not lacking strategy, they are lacking joy in the daily work. Be the artist who turns the grind into a game.
+- Focus on one account until it moves. Multiple accounts means divided attention and false sense of activity. Pick one. Build it. Learn what resonates.
+
+SHORT-FORM VIDEO IS THE PRIMARY GROWTH ENGINE:
+- Every Reel, Short, and TikTok is a free ad to people who do not know this artist exists. Treat it as the primary engine not an afterthought.
+- One video every platform same day: Instagram Reels, TikTok, YouTube Shorts simultaneously. Zero extra work, multiplied surface area.
+- The first second determines everything. Before every post three questions: Why would a complete stranger watch this to the end? Why would they save it? Why would they send it to someone else? If you cannot answer all three fix it first.
+- Caption hack: real post in the caption, continued in comments, rest in first comment. Watch time accumulates while they read. Algorithm reads this as signal for wider distribution.
+- Thumbnail first then video. Find what stops people in your lane. Build around that frame.
+- Only put money behind what already works organically. Boosting weak content accelerates its failure.
+- Announce before you drop on every platform. Early watch time is the most valuable watch time.
+- Hate and criticism are part of the game. Haters are unpaid promoters. The algorithm does not care about sentiment, only engagement. Nobody mocks something that does not threaten them.
+
+BRAND LADDER:
+Level 1 No-Name Product. Level 2 Functional Brand. Level 3 Branded Product, known but not trusted, most artists get stuck here. Level 4 Distinct Brand, chosen on purpose. Level 5 Category Player. Level 6 Category Leader. Level 7 Cultural Brand. Level 8 Celebrity. Level 9 Icon.
+Identify exact level. Tell them what specifically moves them to the next one.
+
+CONTENT HIERARCHY:
+Free: philosophy, personality, vision, world-building. Builds the world.
+Mid-tier: mindset, craft thinking, raw perspective. Builds trust.
+Paid: concentrated value. The offer.
+Diagnose which layer is missing.
+
+UNPREDICTABILITY:
+Every time an artist repeats a formula they train the audience to expect it. Once expected it stops being felt. Identify where this artist is being predictable and give concrete ways to break it without losing identity.
+
+REVERSE ENGINEERING FROM THE GOAL:
+Build strategy BACKWARDS from the goal, not forward from today. Start from the moment the artist has already achieved their goal. Work backwards step by step to today. Make the full chain visible: what must be true right before the goal, before that, before that, and what must happen today as the first brick. This is how the best businesses and careers are built. Make it specific to this artist's goal and current numbers.
+
+MONETIZATION REALITY:
+25,000 streams equals 100 dollars. 5 merch sales at 20 dollars equals the same.
+Features and verses: 100-300 dollars per verse. First few cheaper for case studies.
+Paid strategy sessions: 50-150 dollars. No audience required, just expertise.
+Merch via Printful: zero upfront cost.
+Patreon: only when audience exists. 100 subscribers at 5 dollars equals 500 dollars per month.
+Brand deals at 8K plus followers with real engagement: 500-5,000 dollars per deal. Engagement beats follower count.
+
+ARTIST INFO:
+- Name: ${d.name}
+- Genre and subgenre: ${d.genre} CRITICAL. Every piece of advice must be adapted to this specific sound.
+- Spotify: ${d.spotify||'not provided'}
+- Instagram: ${d.instagram||'not provided'}
+- YouTube: ${d.youtube||'not provided'}
+- Monthly Spotify listeners: ${d.listeners||'unknown'}
+- Instagram followers: ${d.followers||'unknown'}
+- Goal: ${d.goal||'1M listeners'}
+- Biggest challenge: ${d.challenge||'not specified'}
+
+STRICT RULES:
+1. Every piece of advice must be genre-specific. Zero universal advice.
+2. Platform priority: Spotify first, Instagram second, TikTok third, YouTube fourth.
+3. NEVER mention selling or producing beats. These are rappers. They buy beats.
+4. Never recommend budget-required actions without first explaining the free path.
+5. If links not provided use genre and numbers only.
+6. Reference iconic artists only when genuinely useful, always explain WHAT specifically to study.
+7. Write the ENTIRE audit in English only.
+8. No filler. Every sentence must earn its place.
+9. Tone is supportive mentor: honest, warm, direct. Never harsh. Never generic praise.
+
+Return ONLY valid JSON, no markdown, no backticks:
+
+{"scores":[{"label":"Music Strategy","value":"X/10"},{"label":"Personal Brand","value":"X/10"},{"label":"Growth Potential","value":"X/10"},{"label":"Monetization","value":"X/10"}],"blocks":[
+{"tag":"Reality Check","title":"The Question You Need to Answer First","accent":"gold","body":"220-word honest warm supportive diagnosis. Ask directly: does this artist have a real goal or just a wish? Are they releasing music for friends or building a real career? Diagnose based on their actual numbers what their current commitment level reveals, not as judgment but as clarity. Use Kanye example of making a clear decision. Use questions that make the artist reflect. Then diagnose which of the four critical mistakes apply: no identity, no real goal, no serious approach, no system. Be the mentor who shows the mirror supportively."},
+{"tag":"Brand Level & Character Arc","title":"Who You Are and Where You Stand","accent":"gold","body":"200-word diagnosis of exact Brand Ladder level 1-9 with explanation of why. Describe their character arc, who they are becoming, what world they are building, what a stranger feels in 10 seconds on their profile. What is distinctly theirs to amplify, what makes them strange in the best way. What era are they in and what would the next era look like. Reference iconic artists only when useful, explain specifically what to study."},
+{"tag":"Music Audit","title":"Sound, Catalog & Positioning","accent":"gold","body":"200-word audit of their sound in their specific subgenre. What is working, what is missing, what needs to change. Where they are being predictable and how to break it without losing identity. Release cadence. Are they dropping a world or just tracks? How to make each release feel like a chapter with its own moment."},
+{"tag":"Short-Form Video Strategy","title":"How to Go Viral & Stay Relevant","accent":"gold","body":"220-word strategy. Short-form is the primary engine. What formats work RIGHT NOW in their specific subgenre, name them precisely. How to make those formats uniquely theirs. The three questions before every post. Caption hack. One video every platform same day. Announce before you drop. How to build factions lore shared language through short-form. The content game specific to their world."},
+{"tag":"Brand & Content World","title":"Building the World Between Releases","accent":"gold","body":"200-word audit. Both: 1) Specific zero-budget content ideas to shoot today that build their world. 2) The three content layers Free world-building, Mid-tier trust-building, Paid, what exists and what is missing. 3) Where they are being predictable and what to do instead. 4) Thumbnail-first thinking. Accounts to study with specific explanation of what to take from each."},
+{"tag":"Reverse-Engineered Roadmap","title":"Working Backwards From Your Goal","accent":"gold","body":"280-word roadmap built backwards from the goal. Start from the moment the goal is achieved. Work backwards step by step to today making the full chain visible. What must be true right before the goal, before that, before that, and what is the first brick today. Then break into phases with specific Spotify playlists, TikTok formats, collab types, and milestones for their specific lane and numbers."},
+{"tag":"Fan System","title":"Building the Community & the Game","accent":"gold","body":"160-word strategy. Build factions, shared language, inside references. Specific community tools for their genre. How to make fans feel like members not just listeners. The game mechanics. How to create belonging because people do not buy into music they buy into belonging to something bigger than a song."},
+{"tag":"Monetization","title":"First Money — Realistic Revenue","accent":"red","body":"200-word breakdown. 25,000 streams equals 100 dollars. 5 merch sales equals same. Diagnose current level and what monetization is realistic now. Under 1K listeners: lay 3 specific foundations. 1K-50K: specific moves, merch via Printful zero cost, features 100-300 per verse, paid sessions 50-150, Patreon when ready, brand deals at 8K plus engagement at 500-5,000. Never mention beats."},
+{"tag":"One Thing To Do Today","title":"The First Brick. Start Here.","accent":"gold-bright","body":"One single action. Specific. Achievable today in a few hours. The highest-leverage first brick in the reverse-engineered chain. Make it feel urgent and completely doable. This is where the decision to be a real artist, not just someone who releases music, becomes real."}
+]}`;
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,messages:[{role:"user",content:prompt}]})});
+    const res=await fetch("/.netlify/functions/audit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})});
     const json=await res.json();
-    if(!res.ok)throw new Error(json.error?.message||"API error");
+    if(!res.ok)throw new Error(json.error||"API error");
     const raw=json.content.map(b=>b.text||"").join("");
     const parsed=JSON.parse(raw.replace(/```json|```/g,"").trim());
     stopLoading();
@@ -159,13 +253,23 @@ async function runAudit(){
     document.getElementById('loadingWrap').classList.remove('active');
     document.getElementById('formWrap').style.display='';
     document.getElementById('runBtn').disabled=false;
-    showError("Something went wrong. Please try again.");
+    showError("Something went wrong: "+err.message);
   }
 }
 function renderResults(data,name){
   document.getElementById('resultsName').innerHTML=`<em>${name}</em> — Your Strategy.`;
   document.getElementById('scoreRow').innerHTML=(data.scores||[]).map(s=>`<div class="score-card"><div class="score-num">${s.value}</div><div class="score-lbl">${s.label}</div></div>`).join('');
-  document.getElementById('auditBlocks').innerHTML=(data.blocks||[]).map((b,i)=>`<div class="audit-block" style="animation-delay:${i*0.08}s"><div class="block-meta"><div class="block-tag ${b.accent==='red'?'red':''}">${b.tag}</div><div class="block-title">${b.title}</div></div><div class="block-body">${b.body}</div></div>`).join('');
+  document.getElementById('auditBlocks').innerHTML=(data.blocks||[]).map((b,i)=>{
+    const isRed=b.accent==='red';
+    const isHighlight=b.accent==='gold-bright';
+    return `<div class="audit-block${isHighlight?' highlight':''}" style="animation-delay:${i*0.08}s">
+      <div class="block-meta">
+        <div class="block-tag${isRed?' red':isHighlight?' gold-bright':''}">${b.tag}</div>
+        <div class="block-title">${b.title}</div>
+      </div>
+      <div class="block-body">${b.body}</div>
+    </div>`;
+  }).join('');
   document.getElementById('resultsWrap').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
