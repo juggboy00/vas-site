@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#0D1B3E!important">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viral Artist System — Artist Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body {
+    background: #0D1B3E !important;
+    background-color: #0D1B3E !important;
+    margin: 0; padding: 0;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .topbar { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; background: #0D1B3E !important; position: sticky; top: 0; z-index: 100; }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: #fff; letter-spacing: 0.05em; }
+  .logo span { font-weight: 300; font-style: italic; color: #C8AA6E; }
+  .topbar-tag { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); font-weight: 500; }
+  @media (max-width: 700px) { .topbar { padding: 16px 20px; } .topbar-tag { display: none; } }
+  .hero { padding: 72px 48px 64px; max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  @media (max-width: 700px) { .hero { grid-template-columns: 1fr; gap: 40px; padding: 48px 20px 40px; } }
+  .hero-eyebrow { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: #C8AA6E; font-weight: 500; margin-bottom: 20px; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 5.5vw, 68px); font-weight: 300; line-height: 1.02; color: #fff; margin-bottom: 22px; }
+  .hero-title em { font-style: italic; color: #C8AA6E; }
+  .hero-sub { font-size: 13px; line-height: 2; color: rgba(255,255,255,0.45); max-width: 360px; }
+  .stats-panel { background: #162454 !important; border: 1px solid rgba(255,255,255,0.1); padding: 36px 32px; }
+  .stat-item { padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .stat-item:first-child { padding-top: 0; }
+  .stat-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: #C8AA6E; line-height: 1; }
+  .stat-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: right; }
+  .section-divider { height: 1px; background: rgba(255,255,255,0.1); max-width: 1000px; margin: 0 auto; }
+  .form-wrap { max-width: 1000px; margin: 0 auto; padding: 64px 48px 80px; }
+  @media (max-width: 700px) { .form-wrap { padding: 48px 20px 64px; } }
+  .section-label { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: #C8AA6E; font-weight: 500; margin-bottom: 40px; display: flex; align-items: center; gap: 16px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 48px; }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 10px; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #C8AA6E; font-weight: 500; }
+  input, textarea { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: #fff; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 300; padding: 10px 0; outline: none; transition: border-color 0.25s; width: 100%; -webkit-appearance: none; }
+  input:focus, textarea:focus { border-bottom-color: #C8AA6E; }
+  input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.2); font-style: italic; }
+  textarea { resize: none; height: 70px; line-height: 1.8; }
+  .btn-cta { display: block; width: 100%; max-width: 340px; margin: 52px auto 0; background: #C8AA6E; color: #0D1B3E; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; border: none; padding: 18px 32px; cursor: pointer; transition: opacity 0.2s; }
+  .btn-cta:hover { opacity: 0.82; }
+  .btn-cta:disabled { opacity: 0.3; cursor: not-allowed; }
+  .loading { display: none; padding: 100px 48px; text-align: center; max-width: 1000px; margin: 0 auto; }
+  .loading.active { display: block; }
+  .loading-line { width: 160px; height: 1px; background: rgba(255,255,255,0.1); margin: 0 auto 28px; position: relative; overflow: hidden; }
+  .loading-line::after { content: ''; position: absolute; top: 0; left: 0; height: 100%; width: 50%; background: #C8AA6E; animation: sweep 1.6s ease-in-out infinite; }
+  @keyframes sweep { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
+  .loading-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .results { display: none; max-width: 1000px; margin: 0 auto; padding: 64px 48px 100px; }
+  .results.active { display: block; animation: fadeIn 0.5s ease both; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @media (max-width: 700px) { .results { padding: 48px 20px 80px; } }
+  .results-top { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; flex-wrap: wrap; gap: 20px; }
+  .results-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 5vw, 52px); font-weight: 300; color: #fff; line-height: 1; }
+  .results-name em { font-style: italic; color: #C8AA6E; }
+  .btn-reset { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.4); font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+  .btn-reset:hover { border-color: #C8AA6E; color: #C8AA6E; }
+  .score-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 56px; }
+  @media (max-width: 600px) { .score-row { grid-template-columns: repeat(2, 1fr); } }
+  .score-card { background: #162454; padding: 28px 16px; text-align: center; }
+  .score-num { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; color: #C8AA6E; line-height: 1; margin-bottom: 8px; }
+  .score-lbl { font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .audit-block { border-top: 1px solid rgba(255,255,255,0.1); padding: 40px 0; display: grid; grid-template-columns: 210px 1fr; gap: 48px; animation: slideUp 0.4s ease both; }
+  @media (max-width: 600px) { .audit-block { grid-template-columns: 1fr; gap: 14px; padding: 32px 0; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .block-meta { padding-top: 4px; }
+  .block-tag { font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: #C8AA6E; margin-bottom: 12px; }
+  .block-tag.red { color: #e05a3a; }
+  .block-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: #fff; line-height: 1.2; }
+  .block-body { font-size: 13px; line-height: 2; color: rgba(255,255,255,0.62); font-weight: 300; white-space: pre-wrap; }
+  .error-msg { display: none; margin-top: 16px; font-size: 11px; color: #e05a3a; text-align: center; }
+  .error-msg.active { display: block; }
+</style>
+</head>
+<body bgcolor="#0D1B3E">
+<nav class="topbar">
+  <div class="logo">VPS<span> — Viral Artist System</span></div>
+  <div class="topbar-tag">Artist Intelligence</div>
+</nav>
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Exclusive Artist Tool</div>
+    <h1 class="hero-title">Your Path to<br><em>1 Million.</em></h1>
+    <p class="hero-sub">A complete audit of your music, media presence, and brand — with a personal strategy built to take you to 1M listeners.</p>
+  </div>
+  <div class="stats-panel">
+    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">Strategy<br>Modules</div></div>
+    <div class="stat-item"><div class="stat-num">5+</div><div class="stat-label">Revenue<br>Streams</div></div>
+    <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">Day Action<br>Plan</div></div>
+  </div>
+</section>
+<div class="section-divider"></div>
+<div id="formWrap" class="form-wrap">
+  <div class="section-label">Your Profile</div>
+  <div class="form-grid">
+    <div class="field"><label>Artist / Stage Name</label><input type="text" id="artistName" placeholder="Your name"/></div>
+    <div class="field"><label>Genre & Style</label><input type="text" id="genre" placeholder="e.g. Trap, R&B, Indie Pop"/></div>
+    <div class="field"><label>Spotify Artist URL</label><input type="url" id="spotify" placeholder="open.spotify.com/artist/..."/></div>
+    <div class="field"><label>Instagram URL</label><input type="url" id="instagram" placeholder="instagram.com/yourname"/></div>
+    <div class="field"><label>YouTube Channel</label><input type="url" id="youtube" placeholder="youtube.com/@yourname"/></div>
+    <div class="field"><label>Monthly Spotify Listeners</label><input type="text" id="listeners" placeholder="e.g. 2,400"/></div>
+    <div class="field"><label>Instagram Followers</label><input type="text" id="followers" placeholder="e.g. 1,200"/></div>
+    <div class="field"><label>Your Goal & Timeline</label><input type="text" id="goal" placeholder="e.g. 1M listeners in 18 months"/></div>
+    <div class="field full"><label>Biggest Challenge Right Now</label><textarea id="challenge" placeholder="e.g. Can't grow outside my city..."></textarea></div>
+  </div>
+  <button class="btn-cta" id="runBtn" onclick="runAudit()">Generate My Strategy</button>
+  <div class="error-msg" id="errorMsg"></div>
+</div>
+<div class="loading" id="loadingWrap">
+  <div class="loading-line"></div>
+  <div class="loading-label" id="loadingText">Analyzing your profile</div>
+</div>
+<div class="results" id="resultsWrap">
+  <div class="results-top">
+    <div class="results-name" id="resultsName">Your <em>Strategy.</em></div>
+    <button class="btn-reset" onclick="resetForm()">← New Audit</button>
+  </div>
+  <div class="score-row" id="scoreRow"></div>
+  <div id="auditBlocks"></div>
+</div>
+<script>
+const phrases=["Analyzing your profile","Mapping your music strategy","Building your path to 1M","Crafting monetization plan","Finalizing your roadmap"];
+let iv;
+function startLoading(){let i=0;const el=document.getElementById('loadingText');el.textContent=phrases[0];iv=setInterval(()=>{i=(i+1)%phrases.length;el.textContent=phrases[i];},2000);}
+function stopLoading(){clearInterval(iv);}
+function resetForm(){document.getElementById('formWrap').style.display='';document.getElementById('resultsWrap').classList.remove('active');document.getElementById('loadingWrap').classList.remove('active');document.getElementById('runBtn').disabled=false;window.scrollTo({top:0,behavior:'smooth'});}
+async function runAudit(){
+  const artistName=document.getElementById('artistName').value.trim();
+  const genre=document.getElementById('genre').value.trim();
+  if(!artistName||!genre){showError("Please fill in at least your artist name and genre.");return;}
+  hideError();
+  document.getElementById('runBtn').disabled=true;
+  document.getElementById('formWrap').style.display='none';
+  document.getElementById('loadingWrap').classList.add('active');
+  startLoading();
+  const d={name:artistName,genre,spotify:document.getElementById('spotify').value.trim(),instagram:document.getElementById('instagram').value.trim(),youtube:document.getElementById('youtube').value.trim(),listeners:document.getElementById('listeners').value.trim(),followers:document.getElementById('followers').value.trim(),goal:document.getElementById('goal').value.trim(),challenge:document.getElementById('challenge').value.trim()};
+  const prompt=`You are a world-class music industry strategist. Deliver a brutally honest, specific audit. No generic advice. Reference their genre, numbers, situation in every section.\n\nARTIST:\n- Name: ${d.name}\n- Genre: ${d.genre}\n- Spotify: ${d.spotify||'not provided'}\n- Instagram: ${d.instagram||'not provided'}\n- YouTube: ${d.youtube||'not provided'}\n- Monthly Listeners: ${d.listeners||'unknown'}\n- IG Followers: ${d.followers||'unknown'}\n- Goal: ${d.goal||'1M listeners'}\n- Challenge: ${d.challenge||'not specified'}\n\nReturn ONLY valid JSON:\n{"scores":[{"label":"Music Strategy","value":"X/10"},{"label":"Personal Brand","value":"X/10"},{"label":"Growth Potential","value":"X/10"},{"label":"Monetization","value":"X/10"}],"blocks":[{"tag":"Music Audit","title":"Sound, Catalog & Positioning","accent":"gold","body":"220-word audit of music positioning, sound differentiation, release cadence, what is and isnt working."},{"tag":"Brand Audit","title":"Instagram & Personal Brand","accent":"gold","body":"220-word audit of Instagram, bio, content gaps, what builds real fan loyalty."},{"tag":"Growth Roadmap","title":"Path to 1M — Phase by Phase","accent":"gold","body":"270-word roadmap: Phase 1 (0-3mo), Phase 2 (3-6mo), Phase 3 (6-18mo). Platforms, tactics, playlist strategy."},{"tag":"Viral Strategy","title":"Engineering Your Breakout Moment","accent":"gold","body":"200-word viral strategy: TikTok/Reels angles, hook formats, what goes viral in their niche."},{"tag":"Fan System","title":"Converting Listeners to Superfans","accent":"gold","body":"160-word strategy: repeat streams, community, exclusive drops."},{"tag":"Monetization","title":"5 Revenue Streams Beyond Streaming","accent":"red","body":"220-word breakdown: merch, licensing, sync, memberships, brand deals. Specific first steps."},{"tag":"Action Plan","title":"Next 30 Days — Start Here","accent":"gold","body":"Week 1, Week 2, Week 3, Week 4. Concrete actions only."}]}`;
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,messages:[{role:"user",content:prompt}]})});
+    const json=await res.json();
+    if(!res.ok)throw new Error(json.error?.message||"API error");
+    const raw=json.content.map(b=>b.text||"").join("");
+    const parsed=JSON.parse(raw.replace(/```json|```/g,"").trim());
+    stopLoading();
+    document.getElementById('loadingWrap').classList.remove('active');
+    renderResults(parsed,d.name);
+  }catch(err){
+    stopLoading();
+    document.getElementById('loadingWrap').classList.remove('active');
+    document.getElementById('formWrap').style.display='';
+    document.getElementById('runBtn').disabled=false;
+    showError("Something went wrong. Please try again.");
+  }
+}
+function renderResults(data,name){
+  document.getElementById('resultsName').innerHTML=`<em>${name}</em> — Your Strategy.`;
+  document.getElementById('scoreRow').innerHTML=(data.scores||[]).map(s=>`<div class="score-card"><div class="score-num">${s.value}</div><div class="score-lbl">${s.label}</div></div>`).join('');
+  document.getElementById('auditBlocks').innerHTML=(data.blocks||[]).map((b,i)=>`<div class="audit-block" style="animation-delay:${i*0.08}s"><div class="block-meta"><div class="block-tag ${b.accent==='red'?'red':''}">${b.tag}</div><div class="block-title">${b.title}</div></div><div class="block-body">${b.body}</div></div>`).join('');
+  document.getElementById('resultsWrap').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showError(msg){const el=document.getElementById('errorMsg');el.textContent=msg;el.classList.add('active');}
+function hideError(){document.getElementById('errorMsg').classList.remove('active');}
+</script>
+</body>
+</html>
